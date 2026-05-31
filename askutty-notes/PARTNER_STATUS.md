@@ -75,3 +75,10 @@ No unsafe commands without approval.
 - Email privacy fixed with GitHub noreply email
 - Secret scan: no obvious .env/.pem/.key files tracked
 - Purpose: ASKUTTY notes + Pi5 brain backup
+
+## GitHub Collaborator
+- Repo: UniverseDragon14/askutty-cloud-brain
+- Collaborator: universal-Phoenix
+- Permission: write
+- Status: accepted / active
+- Purpose: ASKUTTY cloud brain shared access
