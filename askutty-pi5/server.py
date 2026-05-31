@@ -12,7 +12,7 @@ load_dotenv()
 app = Flask(__name__)
 MEMORY_FILE = 'memory.json'
 ACTION_LOG = 'action_log.json'
-VERSION = "0.7"
+VERSION = "0.8"
 ASKUTTY_TOKEN = os.getenv("ASKUTTY_TOKEN")
 
 def check_auth():
@@ -143,6 +143,9 @@ HTML_TEMPLATE = """
             gap: 12px;
             margin-top: 20px;
         }
+        .mobile-section-buttons {
+            display: none;
+        }
         .btn {
             background-color: transparent;
             border: 1px solid var(--accent-color);
@@ -263,6 +266,9 @@ HTML_TEMPLATE = """
             margin-top: 20px;
             padding-top: 20px;
         }
+        .section-panel {
+            scroll-margin-top: 12px;
+        }
         .operator-header {
             display: flex;
             align-items: center;
@@ -323,6 +329,17 @@ HTML_TEMPLATE = """
             .metrics-grid {
                 gap: 8px;
             }
+            .mobile-section-buttons {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+                margin-bottom: 14px;
+            }
+            .mobile-section-buttons .btn {
+                min-height: 40px;
+                padding: 9px 6px;
+                font-size: 10px;
+            }
             .input-group,
             .voice-controls,
             .unlock-box,
@@ -351,8 +368,15 @@ HTML_TEMPLATE = """
         <div class="card">
             <span class="status-tag">System Live</span>
             <h1>ASKUTTY v{{ version }}</h1>
+
+            <div class="mobile-section-buttons" aria-label="Mobile section shortcuts">
+                <button type="button" class="btn btn-section" data-section-target="ask-section">ASK</button>
+                <button type="button" class="btn btn-section" data-section-target="operator-section">OPERATOR</button>
+                <button type="button" class="btn btn-section" data-section-target="quick-section">QUICK</button>
+                <button type="button" class="btn btn-section" data-section-target="output-section">OUTPUT</button>
+            </div>
             
-            <div class="metrics-grid">
+            <div class="metrics-grid section-panel" id="metrics-section">
                 <div class="metric-card">
                     <span class="metric-value" id="cpu-val">--%</span>
                     <span class="metric-label">CPU</span>
@@ -371,19 +395,21 @@ HTML_TEMPLATE = """
                 </div>
             </div>
 
-            <form action="/ask" method="get" id="ask-form">
-                <div class="input-group">
-                    <input type="text" name="q" id="query-input" placeholder="Type or use voice..." required autocomplete="off">
-                    <button type="submit" class="btn btn-primary" style="padding: 0 20px;">EXE</button>
-                </div>
-                <div class="voice-controls">
-                    <button type="button" id="talk-btn" class="btn" style="flex: 1;">🎤 LISTEN</button>
-                    <button type="button" id="speak-reply-btn" class="btn" style="flex: 1;">🔊 SPEAK</button>
-                </div>
-                <div id="mic-msg">Mic blocked. Use keyboard mic.</div>
-            </form>
+            <div class="section-panel" id="ask-section">
+                <form action="/ask" method="get" id="ask-form">
+                    <div class="input-group">
+                        <input type="text" name="q" id="query-input" placeholder="Type or use voice..." required autocomplete="off">
+                        <button type="submit" class="btn btn-primary" style="padding: 0 20px;">EXE</button>
+                    </div>
+                    <div class="voice-controls">
+                        <button type="button" id="talk-btn" class="btn" style="flex: 1;">🎤 LISTEN</button>
+                        <button type="button" id="speak-reply-btn" class="btn" style="flex: 1;">🔊 SPEAK</button>
+                    </div>
+                    <div id="mic-msg">Mic blocked. Use keyboard mic.</div>
+                </form>
+            </div>
 
-            <div class="safe-operator">
+            <div class="safe-operator section-panel" id="operator-section">
                 <div class="operator-header">
                     <h3>Askutty Safe Operator</h3>
                     <span id="auth-status" class="auth-status locked">LOCKED</span>
@@ -408,7 +434,7 @@ HTML_TEMPLATE = """
                 </div>
             </div>
 
-            <div class="button-grid">
+            <div class="button-grid section-panel" id="quick-section">
                 <a href="/status" class="btn">STATUS</a>
                 <a href="/memory_ui" class="btn">MEMORY</a>
                 <a href="/disk" class="btn">DISK</a>
@@ -416,7 +442,9 @@ HTML_TEMPLATE = """
             </div>
 
             {% if result %}
-            <div class="output" id="output-text">{{ result }}</div>
+            <div class="section-panel" id="output-section">
+                <div class="output" id="output-text">{{ result }}</div>
+            </div>
             {% endif %}
         </div>
     </div>
@@ -430,6 +458,16 @@ HTML_TEMPLATE = """
         const askForm = document.getElementById('ask-form');
         const authStatus = document.getElementById('auth-status');
         const tokenInput = document.getElementById('token-input');
+        const sectionButtons = document.querySelectorAll('[data-section-target]');
+
+        sectionButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                const target = document.getElementById(button.dataset.sectionTarget);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
 
         // Update Metrics
         async function updateMetrics() {
@@ -479,10 +517,17 @@ HTML_TEMPLATE = """
 
         function ensureOutputPanel() {
             if (!outputText) {
+                let outputSection = document.getElementById('output-section');
+                if (!outputSection) {
+                    outputSection = document.createElement('div');
+                    outputSection.className = 'section-panel';
+                    outputSection.id = 'output-section';
+                    document.querySelector('.card').appendChild(outputSection);
+                }
                 outputText = document.createElement('div');
                 outputText.className = 'output';
                 outputText.id = 'output-text';
-                document.querySelector('.card').appendChild(outputText);
+                outputSection.appendChild(outputText);
             }
             return outputText;
         }
