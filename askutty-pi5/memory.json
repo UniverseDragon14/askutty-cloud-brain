@@ -7,6 +7,10 @@
         {
             "query": "/health",
             "timestamp": "Sun May 31 09:09:47 AM +04 2026"
+        },
+        {
+            "query": "Hi",
+            "timestamp": "Sun May 31 08:04:21 PM +04 2026"
         }
     ]
 }
