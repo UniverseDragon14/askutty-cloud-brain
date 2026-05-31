@@ -67,3 +67,11 @@ No unsafe commands without approval.
 - Date: 2026-05-31
 - Reason: ASKUTTY build experiments
 - Warning: Nightly may be unstable
+
+## GitHub Cloud Brain
+- Repo: UniverseDragon14/askutty-cloud-brain
+- Status: pushed successfully
+- Branch: main
+- Email privacy fixed with GitHub noreply email
+- Secret scan: no obvious .env/.pem/.key files tracked
+- Purpose: ASKUTTY notes + Pi5 brain backup
