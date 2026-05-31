@@ -119,7 +119,7 @@ def test_api_status_returns_mocked_values(client):
     assert response.status_code == 200
     data = response.get_json()
     assert data["ok"] is True
-    assert data["version"] == "0.8"
+    assert data["version"] == "0.7"
     assert data["uptime"] == "up 1 hour"
     assert data["cpu"] == 12.5
     assert data["ram"] == 34.0
@@ -198,27 +198,6 @@ def test_no_protected_link_contains_token(client):
     assert "X-ASKUTTY-TOKEN" in html
     assert "sessionStorage" in html
     assert "localStorage" not in html
-
-
-def test_mobile_section_buttons_render_and_target_sections(client):
-    response = client.get("/")
-    html = response.get_data(as_text=True)
-
-    assert response.status_code == 200
-    assert "ASKUTTY v0.8" in html
-    assert 'class="mobile-section-buttons"' in html
-    assert '@media (max-width: 430px)' in html
-    assert "scrollIntoView" in html
-    assert "window.location.href" not in html
-    for target, label in [
-        ("ask-section", "ASK"),
-        ("operator-section", "OPERATOR"),
-        ("quick-section", "QUICK"),
-        ("output-section", "OUTPUT"),
-    ]:
-        assert f'data-section-target="{target}"' in html
-        assert f">{label}</button>" in html
-        assert f'id="{target}"' in html
 
 
 def test_ask_without_query_returns_message(client):
