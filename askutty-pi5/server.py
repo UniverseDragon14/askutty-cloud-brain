@@ -12,12 +12,12 @@ load_dotenv()
 app = Flask(__name__)
 MEMORY_FILE = 'memory.json'
 ACTION_LOG = 'action_log.json'
-VERSION = "0.6"
+VERSION = "0.7"
 ASKUTTY_TOKEN = os.getenv("ASKUTTY_TOKEN")
 
 def check_auth():
-    token = request.headers.get('X-ASKUTTY-TOKEN') or request.args.get('token')
-    return token == ASKUTTY_TOKEN
+    token = request.headers.get('X-ASKUTTY-TOKEN')
+    return bool(ASKUTTY_TOKEN) and token == ASKUTTY_TOKEN
 
 def unauthorized():
     return render_template_string(HTML_TEMPLATE, version=VERSION, result="ASKUTTY locked. Token required."), 403
@@ -59,6 +59,9 @@ HTML_TEMPLATE = """
             --success-color: #00ff41;
             --border-color: #1a1a1a;
             --neon-glow: 0 0 10px rgba(0, 243, 255, 0.5);
+        }
+        * {
+            box-sizing: border-box;
         }
         body {
             background-color: var(--bg-color);
@@ -183,6 +186,7 @@ HTML_TEMPLATE = """
             font-size: 14px;
             line-height: 1.5;
             color: var(--success-color);
+            overflow-wrap: anywhere;
         }
         .output::before {
             content: "> ";
@@ -202,8 +206,25 @@ HTML_TEMPLATE = """
             color: var(--accent-color);
             font-size: 16px;
             font-family: inherit;
+            min-width: 0;
+        }
+        input[type="password"] {
+            flex-grow: 1;
+            min-width: 0;
+            padding: 12px;
+            border-radius: 2px;
+            border: 1px solid var(--border-color);
+            background: #000;
+            color: var(--accent-color);
+            font-size: 16px;
+            font-family: inherit;
         }
         input[type="text"]:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: var(--neon-glow);
+        }
+        input[type="password"]:focus {
             outline: none;
             border-color: var(--accent-color);
             box-shadow: var(--neon-glow);
@@ -236,6 +257,92 @@ HTML_TEMPLATE = """
             0% { opacity: 1; } 
             50% { opacity: 0.3; } 
             100% { opacity: 1; } 
+        }
+        .safe-operator {
+            border-top: 1px solid var(--border-color);
+            margin-top: 20px;
+            padding-top: 20px;
+        }
+        .operator-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .operator-header h3 {
+            color: var(--accent-color);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            margin: 0;
+        }
+        .auth-status {
+            border: 1px solid #ff0055;
+            color: #ff0055;
+            padding: 6px 8px;
+            border-radius: 2px;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        .auth-status.unlocked {
+            border-color: var(--success-color);
+            color: var(--success-color);
+        }
+        .auth-status.invalid {
+            border-color: var(--secondary-accent);
+            color: var(--secondary-accent);
+        }
+        .unlock-box {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            gap: 8px;
+        }
+        .operator-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 10px;
+        }
+        @media (max-width: 430px) {
+            body {
+                padding: 10px;
+            }
+            .card {
+                padding: 16px;
+            }
+            h1 {
+                font-size: 1.35rem;
+                letter-spacing: 2px;
+                padding-right: 78px;
+                text-align: left;
+            }
+            .metrics-grid {
+                gap: 8px;
+            }
+            .input-group,
+            .voice-controls,
+            .unlock-box,
+            .operator-actions,
+            .button-grid {
+                grid-template-columns: 1fr;
+            }
+            .input-group,
+            .voice-controls,
+            .unlock-box {
+                flex-direction: column;
+            }
+            .btn {
+                min-height: 44px;
+                width: 100%;
+            }
+            .status-tag {
+                top: 12px;
+                right: 14px;
+            }
         }
     </style>
 </head>
@@ -276,19 +383,28 @@ HTML_TEMPLATE = """
                 <div id="mic-msg">Mic blocked. Use keyboard mic.</div>
             </form>
 
-            <div style="border-top: 1px solid var(--border-color); margin-top: 20px; padding-top: 20px;">
-                <div id="unlock-box" style="margin-top: 10px; padding: 10px; border: 1px solid var(--border-color); display: flex; gap: 8px;">
-                    <input type="password" id="token-input" placeholder="Token" style="flex: 1; padding: 5px; background: #000; color: var(--accent-color); border: 1px solid var(--border-color);">
-                    <button onclick="saveToken()" class="btn" style="padding: 5px 10px; font-size: 10px;">UNLOCK</button>
+            <div class="safe-operator">
+                <div class="operator-header">
+                    <h3>Askutty Safe Operator</h3>
+                    <span id="auth-status" class="auth-status locked">LOCKED</span>
                 </div>
-                <h3 style="color: var(--accent-color); font-size: 0.8rem; text-transform: uppercase;">Askutty Safe Operator</h3>
+                <div id="unlock-box" class="unlock-box">
+                    <input type="password" id="token-input" placeholder="Token" autocomplete="off">
+                    <button type="button" onclick="saveToken()" class="btn" style="font-size: 10px;">UNLOCK</button>
+                    <button type="button" onclick="lockToken()" class="btn" style="font-size: 10px;">LOCK</button>
+                </div>
                 <div class="input-group">
                     <input type="text" id="op-query" placeholder="e.g. disk check" autocomplete="off">
                     <button type="button" onclick="planCommand()" class="btn" style="padding: 0 15px;">PLAN</button>
                 </div>
-                <div class="button-grid" style="margin-top: 10px;">
-                    <button onclick="approveLatest()" class="btn btn-primary" style="font-size: 10px;">APPROVE LATEST</button>
-                    <button onclick="viewLogs()" class="btn" style="font-size: 10px;">SHOW LOGS</button>
+                <div class="input-group">
+                    <input type="text" id="plan-id" placeholder="Plan ID" autocomplete="off">
+                    <button type="button" onclick="approvePlan()" class="btn btn-primary" style="font-size: 10px;">APPROVE</button>
+                    <button type="button" onclick="rejectPlan()" class="btn" style="font-size: 10px;">REJECT</button>
+                </div>
+                <div class="operator-actions">
+                    <button type="button" onclick="approveLatest()" class="btn btn-primary" style="font-size: 10px;">APPROVE LATEST</button>
+                    <button type="button" onclick="viewLogs()" class="btn" style="font-size: 10px;">SHOW LOGS</button>
                 </div>
             </div>
 
@@ -310,8 +426,10 @@ HTML_TEMPLATE = """
         const speakReplyBtn = document.getElementById('speak-reply-btn');
         const queryInput = document.getElementById('query-input');
         const micMsg = document.getElementById('mic-msg');
-        const outputText = document.getElementById('output-text');
+        let outputText = document.getElementById('output-text');
         const askForm = document.getElementById('ask-form');
+        const authStatus = document.getElementById('auth-status');
+        const tokenInput = document.getElementById('token-input');
 
         // Update Metrics
         async function updateMetrics() {
@@ -330,28 +448,108 @@ HTML_TEMPLATE = """
         updateMetrics();
 
         // Security
-        function saveToken() {
-            const token = document.getElementById('token-input').value;
-            sessionStorage.setItem('askutty_token', token);
-            alert('ASKUTTY token stored in session.');
+        function setAuthStatus(state, text) {
+            authStatus.className = `auth-status ${state}`;
+            authStatus.textContent = text;
         }
+
+        function saveToken() {
+            const token = tokenInput.value.trim();
+            if (!token) {
+                lockToken();
+                return;
+            }
+            sessionStorage.setItem('askutty_token', token);
+            setAuthStatus('unlocked', 'UNLOCKED');
+        }
+
+        function lockToken() {
+            sessionStorage.removeItem('askutty_token');
+            tokenInput.value = '';
+            setAuthStatus('locked', 'LOCKED');
+        }
+
         function getToken() {
             return sessionStorage.getItem('askutty_token') || '';
         }
 
+        function syncAuthStatus() {
+            setAuthStatus(getToken() ? 'unlocked' : 'locked', getToken() ? 'UNLOCKED' : 'LOCKED');
+        }
+
+        function ensureOutputPanel() {
+            if (!outputText) {
+                outputText = document.createElement('div');
+                outputText.className = 'output';
+                outputText.id = 'output-text';
+                document.querySelector('.card').appendChild(outputText);
+            }
+            return outputText;
+        }
+
+        function setOperatorOutput(text) {
+            ensureOutputPanel().textContent = text;
+        }
+
+        function renderOperatorResponse(html) {
+            const doc = new DOMParser().parseFromString(html, 'text/html');
+            const nextOutput = doc.getElementById('output-text');
+            setOperatorOutput(nextOutput ? nextOutput.textContent : html);
+        }
+
+        async function safeOperatorFetch(path) {
+            const token = getToken();
+            if (!token) {
+                setAuthStatus('locked', 'LOCKED');
+                setOperatorOutput('ASKUTTY locked. Token required.');
+                return;
+            }
+
+            try {
+                const res = await fetch(path, {
+                    headers: {
+                        'X-ASKUTTY-TOKEN': token
+                    }
+                });
+                const html = await res.text();
+                setAuthStatus(res.status === 403 ? 'invalid' : 'unlocked', res.status === 403 ? 'INVALID TOKEN' : 'UNLOCKED');
+                renderOperatorResponse(html);
+            } catch (e) {
+                setOperatorOutput('ASKUTTY operator request failed.');
+            }
+        }
+
+        function operatorPath(path, params = {}) {
+            const url = new URL(path, window.location.origin);
+            Object.entries(params).forEach(([key, value]) => url.searchParams.set(key, value));
+            return url.pathname + url.search;
+        }
+
         // Safe Operator Actions
         function planCommand() {
-            const q = document.getElementById('op-query').value;
-            if (q) window.location.href = `/plan?q=${encodeURIComponent(q)}&token=${getToken()}`;
+            const q = document.getElementById('op-query').value.trim();
+            if (q) safeOperatorFetch(operatorPath('/plan', { q }));
+        }
+
+        function approvePlan() {
+            const id = document.getElementById('plan-id').value.trim();
+            if (id) safeOperatorFetch(operatorPath('/approve', { id }));
         }
 
         function approveLatest() {
-            window.location.href = `/approve_latest?token=${getToken()}`;
+            safeOperatorFetch('/approve_latest');
+        }
+
+        function rejectPlan() {
+            const id = document.getElementById('plan-id').value.trim();
+            if (id) safeOperatorFetch(operatorPath('/reject', { id }));
         }
 
         function viewLogs() {
-            window.location.href = `/logs?token=${getToken()}`;
+            safeOperatorFetch('/logs');
         }
+
+        syncAuthStatus();
 
         // Speech Recognition
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;

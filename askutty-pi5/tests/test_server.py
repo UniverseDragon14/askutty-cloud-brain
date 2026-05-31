@@ -119,7 +119,7 @@ def test_api_status_returns_mocked_values(client):
     assert response.status_code == 200
     data = response.get_json()
     assert data["ok"] is True
-    assert data["version"] == "0.6"
+    assert data["version"] == "0.7"
     assert data["uptime"] == "up 1 hour"
     assert data["cpu"] == 12.5
     assert data["ram"] == 34.0
@@ -127,17 +127,22 @@ def test_api_status_returns_mocked_values(client):
     assert data["disk"] == 56.0
 
 
-def test_protected_operator_routes_reject_missing_or_wrong_token(client):
-    missing = client.get("/plan", query_string={"q": "disk check"})
-    wrong = client.get(
+def test_protected_operator_routes_reject_missing_token(client):
+    response = client.get("/plan", query_string={"q": "disk check"})
+
+    assert response.status_code == 403
+    assert "Token required" in response.get_data(as_text=True)
+
+
+def test_protected_operator_routes_reject_wrong_token(client):
+    response = client.get(
         "/plan",
-        query_string={"q": "disk check", "token": "wrong-token"},
+        query_string={"q": "disk check"},
+        headers={"X-ASKUTTY-TOKEN": "wrong-token"},
     )
 
-    assert missing.status_code == 403
-    assert wrong.status_code == 403
-    assert "Token required" in missing.get_data(as_text=True)
-    assert "Token required" in wrong.get_data(as_text=True)
+    assert response.status_code == 403
+    assert "Token required" in response.get_data(as_text=True)
 
 
 def test_protected_operator_routes_accept_header_token(client, tmp_path, monkeypatch, server_module):
@@ -165,11 +170,34 @@ def test_protected_operator_routes_accept_header_token(client, tmp_path, monkeyp
     ]
 
 
-def test_protected_operator_routes_accept_query_token(client):
-    response = client.get("/logs", query_string={"token": FAKE_TOKEN})
+@pytest.mark.parametrize(
+    ("path", "query"),
+    [
+        ("/plan", {"q": "disk check", "token": FAKE_TOKEN}),
+        ("/approve", {"id": "plan-1", "token": FAKE_TOKEN}),
+        ("/approve_latest", {"token": FAKE_TOKEN}),
+        ("/reject", {"id": "plan-1", "token": FAKE_TOKEN}),
+        ("/logs", {"token": FAKE_TOKEN}),
+    ],
+)
+def test_protected_operator_routes_reject_query_token(client, path, query):
+    response = client.get(path, query_string=query)
+
+    assert response.status_code == 403
+    assert "Token required" in response.get_data(as_text=True)
+
+
+def test_no_protected_link_contains_token(client):
+    response = client.get("/")
+    html = response.get_data(as_text=True)
 
     assert response.status_code == 200
-    assert "ACTION LOGS" in response.get_data(as_text=True)
+    assert "token=" not in html
+    assert "?token" not in html
+    assert "window.location.href" not in html
+    assert "X-ASKUTTY-TOKEN" in html
+    assert "sessionStorage" in html
+    assert "localStorage" not in html
 
 
 def test_ask_without_query_returns_message(client):
@@ -239,7 +267,8 @@ def test_ask_forget_last_removes_last_memory_entry(client, tmp_path):
 def test_safe_operator_plan_rejects_unknown_request(client, tmp_path):
     response = client.get(
         "/plan",
-        query_string={"q": "inventory check", "token": FAKE_TOKEN},
+        query_string={"q": "inventory check"},
+        headers=auth_headers(),
     )
 
     assert response.status_code == 200
@@ -262,7 +291,8 @@ def test_safe_operator_plan_blocks_sensitive_or_destructive_patterns(
 ):
     response = client.get(
         "/plan",
-        query_string={"q": query, "token": FAKE_TOKEN},
+        query_string={"q": query},
+        headers=auth_headers(),
     )
 
     assert response.status_code == 200
@@ -290,7 +320,8 @@ def test_safe_operator_approve_executes_pending_plan(client, tmp_path):
 
     response = client.get(
         "/approve",
-        query_string={"id": "plan-1", "token": FAKE_TOKEN},
+        query_string={"id": "plan-1"},
+        headers=auth_headers(),
     )
 
     assert response.status_code == 200
@@ -319,7 +350,8 @@ def test_safe_operator_approve_rejects_non_pending_plan(client, tmp_path):
 
     response = client.get(
         "/approve",
-        query_string={"id": "plan-1", "token": FAKE_TOKEN},
+        query_string={"id": "plan-1"},
+        headers=auth_headers(),
     )
 
     assert response.status_code == 200
@@ -351,7 +383,7 @@ def test_safe_operator_approve_latest_executes_newest_pending_plan(client, tmp_p
         ],
     )
 
-    response = client.get("/approve_latest", query_string={"token": FAKE_TOKEN})
+    response = client.get("/approve_latest", headers=auth_headers())
 
     assert response.status_code == 200
     assert "EXECUTED LATEST: free -h" in response.get_data(as_text=True)
@@ -379,7 +411,8 @@ def test_safe_operator_reject_marks_plan_rejected(client, tmp_path):
 
     response = client.get(
         "/reject",
-        query_string={"id": "plan-1", "token": FAKE_TOKEN},
+        query_string={"id": "plan-1"},
+        headers=auth_headers(),
     )
 
     assert response.status_code == 200
