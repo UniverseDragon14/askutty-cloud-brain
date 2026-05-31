@@ -1,0 +1,14 @@
+[Unit]
+Description=ASKUTTY Pi5 Brain v0.6
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /home/aslam/askutty-pi5/server.py
+WorkingDirectory=/home/aslam/askutty-pi5
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=aslam
+
+[Install]
+WantedBy=multi-user.target
