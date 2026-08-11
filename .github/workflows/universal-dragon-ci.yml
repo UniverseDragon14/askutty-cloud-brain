@@ -1,0 +1,35 @@
+name: Universal Dragon credential preflight
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/universal-dragon-ci.yml"
+      - "prompts/**"
+      - "src/**"
+      - "test/**"
+      - "package.json"
+      - "package-lock.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  credential-preflight:
+    name: OPENAI_API_KEY binding
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    steps:
+      - name: Verify repository secret without revealing it
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${OPENAI_API_KEY:-}" ]; then
+            echo "::error::OPENAI_API_KEY is not configured for askutty-cloud-brain"
+            exit 1
+          fi
+          echo "OPENAI_API_KEY=PRESENT_REDACTED"
