@@ -88,6 +88,14 @@ ASKUTTY_TOKEN           required; long random local secret
 DRAGON_SAFETY_IDENTIFIER  recommended; privacy-preserving stable identifier
 ```
 
+### GitHub Actions credential preflight
+
+Pull-request CI intentionally does not request or validate a live OpenAI key. The
+unit tests use a fake client, and normal code validation should remain secret-free.
+Before a Pi deployment, open **Actions → Universal Dragon CI → Run workflow**, set
+**Verify deployment credentials** to true, and run it. The separate check reports
+only `PRESENT_REDACTED` or a missing-configuration error; it never prints a secret.
+
 Install the reviewed unit:
 
 ```bash
