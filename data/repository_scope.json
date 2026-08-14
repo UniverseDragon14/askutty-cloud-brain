@@ -1,0 +1,559 @@
+{
+  "schema_version": 1,
+  "captured_at": "2026-08-12",
+  "owner": "UniverseDragon14",
+  "source": "GitHub connector repository metadata; this catalog does not claim that code contents were read.",
+  "inventory_complete": true,
+  "default_access": "read_only",
+  "write_allowlist": [
+    "UniverseDragon14/askutty-cloud-brain"
+  ],
+  "protected_projects": [
+    {
+      "label": "QBIT NOVA C Devpost project",
+      "identifiers": [
+        "qbit-nova-c",
+        "qbit-nova-c-private"
+      ],
+      "policy": "read_only_context_no_writes"
+    },
+    {
+      "label": "novakutty.universaldragon.com Devpost project",
+      "identifiers": [
+        "novakutty-dragon-brain",
+        "novakutty-private",
+        "novakutty-dragon-brain-private",
+        "universal-dragon-voice-core-private"
+      ],
+      "policy": "read_only_context_no_writes"
+    }
+  ],
+  "repositories": [
+    {
+      "name": ".github-workflows-android.yml",
+      "repository_full_name": "UniverseDragon14/.github-workflows-android.yml",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": true
+    },
+    {
+      "name": "ai-gateway-test-private",
+      "repository_full_name": "UniverseDragon14/ai-gateway-test-private",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "angular",
+      "repository_full_name": "UniverseDragon14/angular",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": true
+    },
+    {
+      "name": "Antigravity",
+      "repository_full_name": "UniverseDragon14/Antigravity",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "Askutty",
+      "repository_full_name": "UniverseDragon14/Askutty",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": true
+    },
+    {
+      "name": "askutty-cloud-brain",
+      "repository_full_name": "UniverseDragon14/askutty-cloud-brain",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": true
+    },
+    {
+      "name": "bing-cn-mcp-server",
+      "repository_full_name": "UniverseDragon14/bing-cn-mcp-server",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "clerk-docs",
+      "repository_full_name": "UniverseDragon14/clerk-docs",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "cloudflare-docs",
+      "repository_full_name": "UniverseDragon14/cloudflare-docs",
+      "visibility": "public",
+      "default_branch": "production",
+      "code_search_indexed": false
+    },
+    {
+      "name": "com.tachibana.downloader-1.2",
+      "repository_full_name": "UniverseDragon14/com.tachibana.downloader-1.2",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": true
+    },
+    {
+      "name": "cuddly-goggles",
+      "repository_full_name": "UniverseDragon14/cuddly-goggles",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "Dragon-OS-Core",
+      "repository_full_name": "UniverseDragon14/Dragon-OS-Core",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": true
+    },
+    {
+      "name": "earth-globe-threejs",
+      "repository_full_name": "UniverseDragon14/earth-globe-threejs",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "eve-app-builder",
+      "repository_full_name": "UniverseDragon14/eve-app-builder",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": true
+    },
+    {
+      "name": "eve-business-private",
+      "repository_full_name": "UniverseDragon14/eve-business-private",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "eve-quantum-unified-private",
+      "repository_full_name": "UniverseDragon14/eve-quantum-unified-private",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "forgot-app",
+      "repository_full_name": "UniverseDragon14/forgot-app",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": true
+    },
+    {
+      "name": "hetairos-ai-private",
+      "repository_full_name": "UniverseDragon14/hetairos-ai-private",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "hyper-dragon-",
+      "repository_full_name": "UniverseDragon14/hyper-dragon-",
+      "visibility": "public",
+      "default_branch": "nova-v1.4.0-dev",
+      "code_search_indexed": false
+    },
+    {
+      "name": "intellij-sdk-docs",
+      "repository_full_name": "UniverseDragon14/intellij-sdk-docs",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "Magisk",
+      "repository_full_name": "UniverseDragon14/Magisk",
+      "visibility": "public",
+      "default_branch": "master",
+      "code_search_indexed": false
+    },
+    {
+      "name": "my-app-private",
+      "repository_full_name": "UniverseDragon14/my-app-private",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "new-acode-repo",
+      "repository_full_name": "UniverseDragon14/new-acode-repo",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "nova-agi-core-backend",
+      "repository_full_name": "UniverseDragon14/nova-agi-core-backend",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": true
+    },
+    {
+      "name": "nova-continuation-pack",
+      "repository_full_name": "UniverseDragon14/nova-continuation-pack",
+      "visibility": "public",
+      "default_branch": "master",
+      "code_search_indexed": false
+    },
+    {
+      "name": "nova-guard-private",
+      "repository_full_name": "UniverseDragon14/nova-guard-private",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "nova-intelligence-core",
+      "repository_full_name": "UniverseDragon14/nova-intelligence-core",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "nova-lang-private",
+      "repository_full_name": "UniverseDragon14/nova-lang-private",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "nova-lang-termux-private",
+      "repository_full_name": "UniverseDragon14/nova-lang-termux-private",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "nova-war-room-private",
+      "repository_full_name": "UniverseDragon14/nova-war-room-private",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "novakutty-dragon-brain",
+      "repository_full_name": "UniverseDragon14/novakutty-dragon-brain",
+      "visibility": "private",
+      "default_branch": "master",
+      "code_search_indexed": false
+    },
+    {
+      "name": "novakutty-dragon-brain-private",
+      "repository_full_name": "UniverseDragon14/novakutty-dragon-brain-private",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "novakutty-private",
+      "repository_full_name": "UniverseDragon14/novakutty-private",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "qbit-game-v1-private",
+      "repository_full_name": "UniverseDragon14/qbit-game-v1-private",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "qbit-gpu-bridge-private",
+      "repository_full_name": "UniverseDragon14/qbit-gpu-bridge-private",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "qbit-nova-c",
+      "repository_full_name": "UniverseDragon14/qbit-nova-c",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": true
+    },
+    {
+      "name": "qbit-nova-c-private",
+      "repository_full_name": "UniverseDragon14/qbit-nova-c-private",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "qbit-nova-labs-private",
+      "repository_full_name": "UniverseDragon14/qbit-nova-labs-private",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "qbit-nova-language",
+      "repository_full_name": "UniverseDragon14/qbit-nova-language",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "qbit-nova-language-private",
+      "repository_full_name": "UniverseDragon14/qbit-nova-language-private",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "qbit-nova-native",
+      "repository_full_name": "UniverseDragon14/qbit-nova-native",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "qbit-nova-native-parent-private",
+      "repository_full_name": "UniverseDragon14/qbit-nova-native-parent-private",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "qbit-nova-native-private",
+      "repository_full_name": "UniverseDragon14/qbit-nova-native-private",
+      "visibility": "private",
+      "default_branch": "stage5.2-trust-replay-revocation",
+      "code_search_indexed": false
+    },
+    {
+      "name": "studio-site",
+      "repository_full_name": "UniverseDragon14/studio-site",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": true
+    },
+    {
+      "name": "symmetrical-memory",
+      "repository_full_name": "UniverseDragon14/symmetrical-memory",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": true
+    },
+    {
+      "name": "terminal",
+      "repository_full_name": "UniverseDragon14/terminal",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "three.js",
+      "repository_full_name": "UniverseDragon14/three.js",
+      "visibility": "public",
+      "default_branch": "dev",
+      "code_search_indexed": false
+    },
+    {
+      "name": "TripMate-AI-Using-MCP-private",
+      "repository_full_name": "UniverseDragon14/TripMate-AI-Using-MCP-private",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "tron-eve-ai-world-private",
+      "repository_full_name": "UniverseDragon14/tron-eve-ai-world-private",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "UD-applet",
+      "repository_full_name": "UniverseDragon14/UD-applet",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": true
+    },
+    {
+      "name": "ud-business-brain-private",
+      "repository_full_name": "UniverseDragon14/ud-business-brain-private",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "udos-autonomous-builder-private",
+      "repository_full_name": "UniverseDragon14/udos-autonomous-builder-private",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "udos-mobile-safe-private",
+      "repository_full_name": "UniverseDragon14/udos-mobile-safe-private",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "udos-private",
+      "repository_full_name": "UniverseDragon14/udos-private",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "udos-site",
+      "repository_full_name": "UniverseDragon14/udos-site",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": true
+    },
+    {
+      "name": "udos-site-private",
+      "repository_full_name": "UniverseDragon14/udos-site-private",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "Univercial-Dragon",
+      "repository_full_name": "UniverseDragon14/Univercial-Dragon",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": true
+    },
+    {
+      "name": "Universal-dragon",
+      "repository_full_name": "UniverseDragon14/Universal-dragon",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": true
+    },
+    {
+      "name": "Universal-Dragon-Core",
+      "repository_full_name": "UniverseDragon14/Universal-Dragon-Core",
+      "visibility": "public",
+      "default_branch": "nova-v1.4.0-dev",
+      "code_search_indexed": true
+    },
+    {
+      "name": "Universal-Dragon-Core-private",
+      "repository_full_name": "UniverseDragon14/Universal-Dragon-Core-private",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "Universal-Dragon-EVE-private",
+      "repository_full_name": "UniverseDragon14/Universal-Dragon-EVE-private",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "universal-dragon-eye",
+      "repository_full_name": "UniverseDragon14/universal-dragon-eye",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "universal-dragon-eye-private",
+      "repository_full_name": "UniverseDragon14/universal-dragon-eye-private",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "Universal-Dragon-HoloCore-private",
+      "repository_full_name": "UniverseDragon14/Universal-Dragon-HoloCore-private",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "universal-dragon-nova-contact-lab",
+      "repository_full_name": "UniverseDragon14/universal-dragon-nova-contact-lab",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "universal-dragon-singularity",
+      "repository_full_name": "UniverseDragon14/universal-dragon-singularity",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": true
+    },
+    {
+      "name": "universal-dragon-site",
+      "repository_full_name": "UniverseDragon14/universal-dragon-site",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "universal-dragon-voice-core-private",
+      "repository_full_name": "UniverseDragon14/universal-dragon-voice-core-private",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "universaldragon",
+      "repository_full_name": "UniverseDragon14/universaldragon",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "universe-dragon-core",
+      "repository_full_name": "UniverseDragon14/universe-dragon-core",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": true
+    },
+    {
+      "name": "UniverseDragon14.github.io",
+      "repository_full_name": "UniverseDragon14/UniverseDragon14.github.io",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": true
+    },
+    {
+      "name": "upload-artifact",
+      "repository_full_name": "UniverseDragon14/upload-artifact",
+      "visibility": "public",
+      "default_branch": "main",
+      "code_search_indexed": true
+    },
+    {
+      "name": "v47-private",
+      "repository_full_name": "UniverseDragon14/v47-private",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": false
+    },
+    {
+      "name": "v86",
+      "repository_full_name": "UniverseDragon14/v86",
+      "visibility": "public",
+      "default_branch": "master",
+      "code_search_indexed": false
+    },
+    {
+      "name": "ZOMBIE_DRAGON-private",
+      "repository_full_name": "UniverseDragon14/ZOMBIE_DRAGON-private",
+      "visibility": "private",
+      "default_branch": "main",
+      "code_search_indexed": false
+    }
+  ]
+}
+

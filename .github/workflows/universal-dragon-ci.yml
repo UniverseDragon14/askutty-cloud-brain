@@ -1,0 +1,112 @@
+name: Universal Dragon CI
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/universal-dragon-ci.yml"
+      - ".env.example"
+      - ".gitignore"
+      - "askutty-pi5/**"
+      - "data/repository_scope.json"
+      - "docs/UNIVERSAL_DRAGON_DEPLOY.md"
+      - "prompts/**"
+      - "requirements.txt"
+  workflow_dispatch:
+    inputs:
+      verify_deployment_credentials:
+        description: "Run the non-revealing credential check before deployment"
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: universal-dragon-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit-tests:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt pytest
+
+      - name: Compile Python
+        run: python -m compileall -q askutty-pi5
+
+      - name: Run repository tests
+        run: python -m pytest -q
+
+      - name: Verify repository scope and secret hygiene
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+
+          scope = json.loads(Path("data/repository_scope.json").read_text())
+          assert scope["inventory_complete"] is True
+          assert len(scope["repositories"]) == 75
+          assert scope["write_allowlist"] == [
+              "UniverseDragon14/askutty-cloud-brain"
+          ]
+
+          key_prefix = b"sk-" + b"proj-"
+          generic_key = b"sk-" + rb"[A-Za-z0-9_-]{20,}"
+          openai_assignment = b"OPENAI_" + rb"API_KEY=[^\s]+"
+          auth_assignment = b"ASKUTTY_" + rb"TOKEN=[^\s]+"
+          secret_pattern = re.compile(
+              b"(" + b"|".join(
+                  [key_prefix, generic_key, openai_assignment, auth_assignment]
+              ) + b")"
+          )
+          excluded = {".git"}
+          for path in Path(".").rglob("*"):
+              if not path.is_file() or any(part in excluded for part in path.parts):
+                  continue
+              if "__pycache__" in path.parts or path.suffix == ".pyc":
+                  continue
+              if secret_pattern.search(path.read_bytes()):
+                  raise SystemExit(f"secret-like pattern detected in {path}")
+          print("SCOPE_AND_SECRET_HYGIENE=PASS")
+          PY
+
+  credential-preflight:
+    if: github.event_name == 'workflow_dispatch' && inputs.verify_deployment_credentials
+    name: OPENAI_API_KEY binding (manual deploy gate)
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    steps:
+      - name: Verify repository secret without revealing it
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${OPENAI_API_KEY:-}" ]; then
+            echo "::error::OPENAI_API_KEY is not configured for askutty-cloud-brain"
+            exit 1
+          fi
+          echo "OPENAI_API_KEY PRESENT_REDACTED"
