@@ -14,6 +14,12 @@ on:
       - "prompts/**"
       - "requirements.txt"
   workflow_dispatch:
+    inputs:
+      verify_deployment_credentials:
+        description: "Run the non-revealing credential check before deployment"
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -88,7 +94,8 @@ jobs:
           PY
 
   credential-preflight:
-    name: OPENAI_API_KEY binding
+    if: github.event_name == 'workflow_dispatch' && inputs.verify_deployment_credentials
+    name: OPENAI_API_KEY binding (manual deploy gate)
     runs-on: ubuntu-latest
     timeout-minutes: 3
     env:
