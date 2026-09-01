@@ -1,82 +1,61 @@
-# ASKUTTY Cloud Brain
+# ASKUTTY Pi5 Cloud Brain
 
-ASKUTTY Cloud Brain is a private continuity and planning repository inside the Universal Dragon ecosystem.
+Private Flask dashboard and approval-first command planner for a Raspberry Pi 5.
 
-It stores ASKUTTY notes, Pi5 brain planning, Huawei shoulder/mobile ideas, safe checkpoint scripts, and project memory documents.
+## Implemented service
 
-## Core Identity
+**askutty-pi5/server.py** provides:
 
-- **Creator:** Aslam
-- **Project Family:** Universal Dragon
-- **Assistant Identity:** ASKUTTY / NOVA kutty / EVE direction
-- **Main Purpose:** Keep project notes, safe checkpoints, cloud-brain planning, and mobile/Pi5 continuity in one private place.
+- CPU, RAM, disk, uptime, and Pi temperature metrics;
+- health and status APIs;
+- memory/status pages;
+- plan, approve, reject, and action-log flows;
+- a small fixed command map for disk, CPU, RAM, selected service, Git, and network status;
+- a War Room page.
 
-## Current Shape
+Key routes include **/api/metrics**, **/api/status**, **/api/memory**, **/health**, **/plan**, **/approve**, **/reject**, **/logs**, and **/warroom**.
 
-```text
-Huawei phone  = shoulder / mobile shell
-Raspberry Pi5 = local live brain
-GitHub        = code and notes backup
-Drive/cloud   = memory, backups, archives, STL, gcode, videos
-```
+The test suite in **askutty-pi5/tests/test_server.py** exercises authentication, planning, approval, and service behavior.
 
-ASKUTTY is not only an app. It is a working continuity layer for Aslam's Universal Dragon journey.
+## Run locally
 
-## Repository Structure
+~~~bash
+export ASKUTTY_TOKEN="create-a-long-random-local-token"
+python3 askutty-pi5/server.py
+~~~
 
-```text
-askutty-notes/   Project notes, vision files, growth logs, reports
-askutty-pi5/     Pi5-side planning and support files
-.github/         GitHub workflow files
-.gitignore       Keeps private keys, env files, logs, and build folders out
-```
+The current server listens on port **7797**.
 
-## Safety Rules
+Requests to protected operations must send the token in the **X-ASKUTTY-TOKEN** header.
 
-- No API keys in GitHub.
-- No private passwords or tokens.
-- No public exposure of local IP addresses.
-- No destructive action without approval.
-- No hidden automation.
-- No real-world hardware control without extra approval.
-- Backup first, then build.
+## Approval model
 
-## Daily Workflow
+~~~text
+request
+  -> exact phrase lookup in SAFE_COMMANDS
+  -> pending plan
+  -> explicit approve or reject
+  -> bounded command
+  -> action log
+~~~
 
-```text
-1. Check current state
-2. Pick one small task
-3. Backup
-4. Build or update
-5. Test
-6. Save result
-7. Write short log
-```
+Commands not present in the fixed map are rejected.
 
-## Project Role
+## Security boundary
 
-ASKUTTY Cloud Brain supports:
+The application currently binds to **0.0.0.0** and some approved commands are executed through shell=True. The fixed map limits input selection, but this is not sufficient for direct Internet exposure.
 
-- Universal Dragon project continuity
-- EVE/NOVA/ASKUTTY memory notes
-- Pi5 local brain planning
-- Huawei/Moto mobile assistant-layer experiments
-- Safe checkpoint and backup habit
-- Future assistant-first workflow
+- Keep it behind a private firewall or bind it to loopback.
+- Never expose it through a public tunnel without additional authentication, TLS/origin controls, rate limits, CSRF protection, and route-by-route review.
+- Replace shell strings with argument arrays before production use.
+- Store ASKUTTY_TOKEN only in the local environment.
+- Metrics and status pages expose host information.
+- Approval is local application control, not a cryptographic signature.
+
+## Truth boundary
+
+This is a Pi dashboard and allowlisted planner. It is not an unrestricted terminal, autonomous system administrator, or hardware controller.
 
 ## Status
 
-```text
-Status: active private support repo
-Mode: notes + continuity + safe checkpoint planning
-Priority: important support layer
-Public rule: keep sensitive details private
-```
-
-## Next Clean Steps
-
-- Keep root README updated.
-- Keep notes inside `askutty-notes/`.
-- Keep Pi5 support work inside `askutty-pi5/`.
-- Avoid mixing private runtime files with public documentation.
-- Add changelog later if the repo grows.
+Functional private prototype with tests; production hardening is still required.
